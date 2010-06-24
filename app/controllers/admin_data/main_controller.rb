@@ -127,6 +127,10 @@ class AdminData::MainController  < AdminData::BaseController
     end
 
     @model = @klass.send('find', :first, :conditions => condition)
+    @custom_actions = []
+    if AdminDataConfig.setting[:custom_action] && AdminDataConfig.setting[:custom_action][@klass.name]
+      @custom_actions = AdminDataConfig.setting[:custom_action][@klass.name].keys
+    end
     unless @model
       render :text => "<h2>#{@klass.name} not found: #{params[:id]}</h2>", :status => :not_found
     end

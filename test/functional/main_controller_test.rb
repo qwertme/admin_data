@@ -179,14 +179,24 @@ class AdminData::MainControllerTest < ActionController::TestCase
 
   context 'get show for car' do
     setup do
+      AdminDataConfig.set = ({:custom_action => {'Vehicle::Car' => {:change_oil => lambda {|model| oil_changed = model}}}})
       @engine = Factory(:engine, :car => @car, :cylinders => 4)
       get :show, {:id => @car.id, :klass => @car.class.name.underscore }
     end
+    teardown do
+      AdminDataConfig.set = ({:custom_action => nil })
+    end
+
     should_respond_with :success
     should 'have one association link for engine' do
       s2 = ERB::Util.html_escape('&')
       url = "/admin_data/klass/engine/#{@engine.id}"
       assert_tag(:tag => 'a', :content => /engine/, :attributes => {:href => url})
+    end
+    should_assign_to :custom_actions
+    should "have change oil in custom actions" do
+      assert_equal 1, assigns(:custom_actions).size
+      assert_equal :change_oil, assigns(:custom_actions)[0]
     end
   end
 
