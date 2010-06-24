@@ -105,7 +105,7 @@ class AdminData::MainController  < AdminData::BaseController
 
   def custom
     model_actions = AdminDataConfig.setting[:custom_action] ? AdminDataConfig.setting[:custom_action][@klass.name] : nil
-    action = model_actions ? model_actions[params[:custom_action]] : nil
+    action = model_actions ? model_actions[params[:custom_action].to_sym] : nil
     action.call(@model) if action
     redirect_to admin_data_on_k_path(:klass => @klass.name.underscore, :id => @model)
   end

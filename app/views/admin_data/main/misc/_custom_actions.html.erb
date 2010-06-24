@@ -1,0 +1,13 @@
+<% if !custom_actions.empty?%>
+  <div class="block rounded">
+    <h3>Custom Actions</h3>
+    <div style='padding-left:15px'>
+      <%custom_actions.each do |action|%>
+        <p>
+        <%= link_to action.to_s.humanize, custom_admin_data_on_k_path(:klass => klass.name.underscore, :id => model, :custom_action => action),
+              { :method => :put} %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+<% end %>
