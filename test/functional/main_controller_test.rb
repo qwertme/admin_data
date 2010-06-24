@@ -27,6 +27,8 @@ class AdminData::MainControllerTest < ActionController::TestCase
 
   should_route :put, '/admin_data/klass/article/1', :controller => 'admin_data/main', :action => :update, :klass => 'article', :id => 1
 
+  should_route :put, '/admin_data/klass/article/1/custom', :controller => 'admin_data/main', :action => :custom, :klass => 'article', :id => 1
+
   should_route :get, '/admin_data/klass/article/new', :controller => 'admin_data/main', :action => :new, :klass => 'article'
 
   should_route :post, '/admin_data/klass/article', :controller => 'admin_data/main', :action => :create, :klass => 'article'
