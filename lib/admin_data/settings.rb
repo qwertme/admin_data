@@ -20,6 +20,7 @@ class AdminDataConfig
     rake_options
     drop_down_for_associations
     ignore_column_limit
+    custom_action
     ).collect(&:intern)
 
     extra_keys = input.keys - valid_keys

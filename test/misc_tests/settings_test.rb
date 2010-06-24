@@ -12,6 +12,7 @@ class AdminData::AdminDataConfigTest < ActionController::TestCase
     will_paginate_per_page
     is_allowed_to_view
     is_allowed_to_update
+    custom_action
     ).each do |valid_key|
       should "store #{valid_key} setting" do
         AdminDataConfig.set = { valid_key.to_sym => "some value for #{valid_key}" }
