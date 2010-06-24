@@ -384,12 +384,26 @@ class AdminData::MainControllerTest < ActionController::TestCase
     end
   end
 
-
   context 'get edit car' do
     setup do
       get :edit, {:id => @car.id, :klass => @car.class.name.underscore }
     end
     should_respond_with :success
+  end
+
+  context 'execute custom action' do
+    oil_changed = nil
+    setup do
+      AdminDataConfig.set = ({:custom_action => {'Vehicle::Car' => {:change_oil => lambda {|model| oil_changed = model}}}})
+      put :custom, {:id => @car.id, :klass => @car.class.name.underscore, :custom_action => :change_oil }
+    end
+    teardown do
+      AdminDataConfig.set = ({:custom_action => nil})
+    end
+    should_respond_with :redirect
+    should "have executed the action" do
+      assert_equal @car, oil_changed
+    end
   end
 
   context 'get new article' do

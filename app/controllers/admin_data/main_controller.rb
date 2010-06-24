@@ -2,17 +2,17 @@ class AdminData::MainController  < AdminData::BaseController
 
   unloadable
 
-  before_filter :get_class_from_params, :only => [ :table_structure, :show, :destroy, :del, :edit, :new, :update, :create]
+  before_filter :get_class_from_params, :only => [ :table_structure, :show, :destroy, :del, :edit, :new, :update, :create, :custom]
 
   before_filter :ensure_is_allowed_to_view
 
-  before_filter :get_model_and_verify_it, :only => [:destroy, :del, :edit, :update, :show]
+  before_filter :get_model_and_verify_it, :only => [:destroy, :del, :edit, :update, :show, :custom]
 
   before_filter :ensure_is_allowed_to_view_model, :except => [:all_models, :index]
 
-  before_filter :ensure_is_allowed_to_update, :only => [:destroy, :del, :edit, :update, :create]
+  before_filter :ensure_is_allowed_to_update, :only => [:destroy, :del, :edit, :update, :create, :custom]
 
-  before_filter :ensure_is_allowed_to_update_model, :only => [:destroy, :del, :edit, :update, :create]
+  before_filter :ensure_is_allowed_to_update_model, :only => [:destroy, :del, :edit, :update, :create, :custom]
 
 
   def table_structure
@@ -101,6 +101,13 @@ class AdminData::MainController  < AdminData::BaseController
         format.js { render :json => {} }
       end
     end
+  end
+
+  def custom
+    model_actions = AdminDataConfig.setting[:custom_action] ? AdminDataConfig.setting[:custom_action][@klass.name] : nil
+    action = model_actions ? model_actions[params[:custom_action]] : nil
+    action.call(@model) if action
+    redirect_to admin_data_on_k_path(:klass => @klass.name.underscore, :id => @model)
   end
 
   private
